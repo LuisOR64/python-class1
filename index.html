@@ -1,11 +1,1240 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex — La plataforma para construir el futuro</title>
+  <meta name="description" content="Apex te permite crear, desplegar y escalar aplicaciones web de alto rendimiento. La herramienta definitiva para equipos modernos.">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-bg: #0a0a0a;
+      --color-surface: #111111;
+      --color-surface-hover: #1a1a1a;
+      --color-border: #222222;
+      --color-text: #ededed;
+      --color-text-muted: #888888;
+      --color-accent: #00c896;
+      --color-accent-hover: #00e6ac;
+      --color-white: #ffffff;
+      --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Fira Mono', monospace;
+      --radius: 8px;
+      --max-width: 1200px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* ===== UTILITY ===== */
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+
+    /* ===== HEADER / NAV ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .header__logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--color-white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header__logo-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--color-accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header__logo-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .header__nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .header__nav-links {
+      display: flex;
+      gap: 28px;
+    }
+
+    .header__nav-links a {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      transition: color 0.2s;
+    }
+
+    .header__nav-links a:hover {
+      color: var(--color-white);
+    }
+
+    .header__cta {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-bg);
+      background: var(--color-white);
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .header__cta:hover {
+      opacity: 0.85;
+    }
+
+    /* Mobile menu toggle */
+    .header__menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .header__menu-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--color-text);
+      margin: 5px 0;
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* Mobile nav overlay */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      top: 64px;
+      background: var(--color-bg);
+      z-index: 99;
+      padding: 40px 24px;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .mobile-nav.active {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-size: 1.25rem;
+      color: var(--color-text-muted);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border);
+      transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover {
+      color: var(--color-white);
+    }
+
+    .mobile-nav .header__cta {
+      margin-top: 16px;
+      text-align: center;
+      justify-content: center;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      padding: 160px 0 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 200, 150, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-accent);
+      background: rgba(0, 200, 150, 0.08);
+      border: 1px solid rgba(0, 200, 150, 0.2);
+      border-radius: 9999px;
+      margin-bottom: 32px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero__badge-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero__title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      color: var(--color-white);
+      margin-bottom: 24px;
+      text-wrap: balance;
+    }
+
+    .hero__title span {
+      color: var(--color-accent);
+    }
+
+    .hero__subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--color-text-muted);
+      max-width: 600px;
+      margin: 0 auto 48px;
+      line-height: 1.6;
+      text-wrap: pretty;
+    }
+
+    .hero__actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      color: var(--color-bg);
+      background: var(--color-accent);
+      border: none;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: transparent;
+      border: 1px solid var(--color-border);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-surface);
+      border-color: var(--color-text-muted);
+    }
+
+    /* ===== STATS BAR ===== */
+    .stats {
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+      padding: 48px 0;
+    }
+
+    .stats__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      text-align: center;
+    }
+
+    .stats__item-number {
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800;
+      color: var(--color-white);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .stats__item-number span {
+      color: var(--color-accent);
+    }
+
+    .stats__item-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-top: 8px;
+    }
+
+    /* ===== FEATURES ===== */
+    .features {
+      padding: 120px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      font-weight: 800;
+      color: var(--color-white);
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      text-wrap: balance;
+    }
+
+    .section-subtitle {
+      font-size: 1.0625rem;
+      color: var(--color-text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+      text-wrap: pretty;
+    }
+
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      transition: border-color 0.3s, transform 0.2s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(0, 200, 150, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .feature-card__icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(0, 200, 150, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .feature-card__icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--color-accent);
+    }
+
+    .feature-card__title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-white);
+      margin-bottom: 12px;
+    }
+
+    .feature-card__desc {
+      font-size: 0.9375rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-it-works {
+      padding: 120px 0;
+      background: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      margin-top: 72px;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: calc(16.66% + 32px);
+      right: calc(16.66% + 32px);
+      height: 2px;
+      background: var(--color-border);
+    }
+
+    .step {
+      text-align: center;
+      position: relative;
+    }
+
+    .step__number {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--color-bg);
+      border: 2px solid var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-accent);
+      margin: 0 auto 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .step__title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--color-white);
+      margin-bottom: 12px;
+    }
+
+    .step__desc {
+      font-size: 0.9375rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      max-width: 280px;
+      margin: 0 auto;
+    }
+
+    /* ===== TESTIMONIALS ===== */
+    .testimonials {
+      padding: 120px 0;
+    }
+
+    .testimonials__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s;
+    }
+
+    .testimonial-card:hover {
+      border-color: rgba(0, 200, 150, 0.3);
+    }
+
+    .testimonial-card__stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+    }
+
+    .testimonial-card__stars svg {
+      width: 18px;
+      height: 18px;
+      color: var(--color-accent);
+      fill: var(--color-accent);
+    }
+
+    .testimonial-card__quote {
+      font-size: 0.9375rem;
+      color: var(--color-text);
+      line-height: 1.7;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+
+    .testimonial-card__author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-card__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(0, 200, 150, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--color-accent);
+    }
+
+    .testimonial-card__name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-white);
+    }
+
+    .testimonial-card__role {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+
+    /* ===== CTA ===== */
+    .cta {
+      padding: 120px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(0, 200, 150, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta__box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 16px;
+      padding: 72px 48px;
+      position: relative;
+    }
+
+    .cta__title {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 800;
+      color: var(--color-white);
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      text-wrap: balance;
+    }
+
+    .cta__subtitle {
+      font-size: 1.0625rem;
+      color: var(--color-text-muted);
+      max-width: 500px;
+      margin: 0 auto 40px;
+      text-wrap: pretty;
+    }
+
+    .cta__form {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .cta__input {
+      flex: 1;
+      padding: 14px 20px;
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      color: var(--color-text);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 9999px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .cta__input::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    .cta__input:focus {
+      border-color: var(--color-accent);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      border-top: 1px solid var(--color-border);
+      padding: 64px 0 40px;
+    }
+
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 56px;
+    }
+
+    .footer__brand-desc {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      margin-top: 16px;
+      max-width: 280px;
+    }
+
+    .footer__col-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-white);
+      margin-bottom: 20px;
+    }
+
+    .footer__links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer__links a {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer__links a:hover {
+      color: var(--color-white);
+    }
+
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 32px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer__copyright {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+    }
+
+    .footer__socials {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer__socials a {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .footer__socials a:hover {
+      border-color: var(--color-accent);
+      background: rgba(0, 200, 150, 0.08);
+    }
+
+    .footer__socials svg {
+      width: 16px;
+      height: 16px;
+      color: var(--color-text-muted);
+    }
+
+    .footer__socials a:hover svg {
+      color: var(--color-accent);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .features__grid,
+      .testimonials__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .steps {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+      }
+
+      .footer__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header__nav-links,
+      .header__cta {
+        display: none;
+      }
+
+      .header__menu-toggle {
+        display: block;
+      }
+
+      .hero {
+        padding: 130px 0 80px;
+      }
+
+      .stats__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+
+      .features__grid,
+      .testimonials__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .steps::before {
+        display: none;
+      }
+
+      .cta__form {
+        flex-direction: column;
+      }
+
+      .cta__input {
+        width: 100%;
+      }
+
+      .cta__box {
+        padding: 48px 24px;
+      }
+
+      .footer__grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer__bottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .features,
+      .testimonials,
+      .how-it-works,
+      .cta {
+        padding: 80px 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero__actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .stats__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-    My first web page
+
+  <!-- ===== HEADER ===== -->
+  <header class="header" role="banner">
+    <div class="container header__inner">
+      <a href="#" class="header__logo" aria-label="Apex - Inicio">
+        <div class="header__logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
+          </svg>
+        </div>
+        Apex
+      </a>
+
+      <nav class="header__nav" aria-label="Navegacion principal">
+        <ul class="header__nav-links">
+          <li><a href="#features">Producto</a></li>
+          <li><a href="#how-it-works">Soluciones</a></li>
+          <li><a href="#testimonials">Clientes</a></li>
+          <li><a href="#cta">Precios</a></li>
+        </ul>
+        <a href="#cta" class="header__cta">Comenzar gratis</a>
+      </nav>
+
+      <button class="header__menu-toggle" aria-label="Abrir menu de navegacion" aria-expanded="false" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <nav class="mobile-nav" id="mobileNav" aria-label="Navegacion movil">
+      <a href="#features" onclick="closeMenu()">Producto</a>
+      <a href="#how-it-works" onclick="closeMenu()">Soluciones</a>
+      <a href="#testimonials" onclick="closeMenu()">Clientes</a>
+      <a href="#cta" onclick="closeMenu()">Precios</a>
+      <a href="#cta" class="header__cta" onclick="closeMenu()">Comenzar gratis</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero__badge">
+          <span class="hero__badge-dot" aria-hidden="true"></span>
+          Nuevo: integraciones con IA disponibles
+        </div>
+        <h1 class="hero__title" id="hero-title">
+          La plataforma completa<br>para <span>construir la web</span>
+        </h1>
+        <p class="hero__subtitle">
+          Crea, despliega y escala aplicaciones de alto rendimiento.
+          La herramienta definitiva para equipos que quieren enviar productos sin friccion.
+        </p>
+        <div class="hero__actions">
+          <a href="#cta" class="btn-primary">
+            Comenzar ahora
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="#features" class="btn-secondary">Explorar producto</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats" aria-label="Estadisticas destacadas">
+      <div class="container">
+        <div class="stats__grid">
+          <div class="stats__item">
+            <div class="stats__item-number">20<span>+</span></div>
+            <div class="stats__item-label">Dias ahorrados por mes</div>
+          </div>
+          <div class="stats__item">
+            <div class="stats__item-number">98<span>%</span></div>
+            <div class="stats__item-label">Reduccion en tiempo de deploy</div>
+          </div>
+          <div class="stats__item">
+            <div class="stats__item-number">300<span>%</span></div>
+            <div class="stats__item-label">Incremento en rendimiento SEO</div>
+          </div>
+          <div class="stats__item">
+            <div class="stats__item-number">6<span>x</span></div>
+            <div class="stats__item-label">Velocidad de compilacion</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="features" id="features" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Caracteristicas</span>
+          <h2 class="section-title" id="features-title">Todo lo que necesitas para crear productos excepcionales</h2>
+          <p class="section-subtitle">Herramientas potentes diseñadas para equipos que exigen velocidad, calidad y confiabilidad en cada despliegue.</p>
+        </div>
+
+        <div class="features__grid">
+          <!-- Feature 1 -->
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-card__title">Deploys instantaneos</h3>
+            <p class="feature-card__desc">Publica cambios al instante con integracion continua. Cada push al repositorio genera un despliegue automatico global.</p>
+          </article>
+
+          <!-- Feature 2 -->
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+            </div>
+            <h3 class="feature-card__title">Seguridad por defecto</h3>
+            <p class="feature-card__desc">SSL automatico, proteccion DDoS y cabeceras seguras incluidas sin configuracion adicional en cada proyecto.</p>
+          </article>
+
+          <!-- Feature 3 -->
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+            <h3 class="feature-card__title">Analiticas en tiempo real</h3>
+            <p class="feature-card__desc">Monitorea el rendimiento de tu aplicacion con metricas detalladas de Core Web Vitals, errores y trafico en vivo.</p>
+          </article>
+
+          <!-- Feature 4 -->
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </div>
+            <h3 class="feature-card__title">Integraciones nativas</h3>
+            <p class="feature-card__desc">Conecta bases de datos, servicios de autenticacion, almacenamiento y APIs externas en segundos con nuestro ecosistema.</p>
+          </article>
+
+          <!-- Feature 5 -->
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <h3 class="feature-card__title">Red global Edge</h3>
+            <p class="feature-card__desc">Sirve contenido desde el punto mas cercano al usuario con nuestra CDN distribuida en mas de 70 regiones del mundo.</p>
+          </article>
+
+          <!-- Feature 6 -->
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3 class="feature-card__title">Colaboracion en equipo</h3>
+            <p class="feature-card__desc">Trabaja en equipo con previews compartidos, comentarios en contexto y flujos de revision integrados por defecto.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="how-it-works" id="how-it-works" aria-labelledby="how-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Como funciona</span>
+          <h2 class="section-title" id="how-title">De la idea al producto en tres pasos</h2>
+          <p class="section-subtitle">Un flujo de trabajo optimizado para que tu equipo se concentre en construir, no en configurar.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step__number" aria-hidden="true">1</div>
+            <h3 class="step__title">Conecta tu repositorio</h3>
+            <p class="step__desc">Vincula tu proyecto de GitHub, GitLab o Bitbucket y nosotros nos encargamos del resto automaticamente.</p>
+          </div>
+          <div class="step">
+            <div class="step__number" aria-hidden="true">2</div>
+            <h3 class="step__title">Configura en segundos</h3>
+            <p class="step__desc">Detectamos tu framework, configuramos el entorno y optimizamos el build automaticamente sin archivos extra.</p>
+          </div>
+          <div class="step">
+            <div class="step__number" aria-hidden="true">3</div>
+            <h3 class="step__title">Despliega globalmente</h3>
+            <p class="step__desc">Tu aplicacion estara disponible en nuestra red Edge global con HTTPS automatico y dominios personalizados.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== TESTIMONIALS ===== -->
+    <section class="testimonials" id="testimonials" aria-labelledby="testimonials-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">Testimonios</span>
+          <h2 class="section-title" id="testimonials-title">Lo que dicen nuestros clientes</h2>
+          <p class="section-subtitle">Miles de equipos confian en Apex para construir y escalar sus aplicaciones criticas.</p>
+        </div>
+
+        <div class="testimonials__grid">
+          <article class="testimonial-card">
+            <div class="testimonial-card__stars" aria-label="5 estrellas">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <p class="testimonial-card__quote">"Apex transformo nuestro flujo de trabajo. Pasamos de deploys manuales de 45 minutos a despliegues automaticos en menos de un minuto. Nuestro equipo ahora se enfoca 100% en el producto."</p>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar" aria-hidden="true">MC</div>
+              <div>
+                <div class="testimonial-card__name">Maria Castillo</div>
+                <div class="testimonial-card__role">CTO, DataFlow</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="testimonial-card__stars" aria-label="5 estrellas">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <p class="testimonial-card__quote">"La velocidad de la red Edge es increible. Nuestros usuarios en Latinoamerica ahora experimentan tiempos de carga 3 veces mas rapidos. La migracion fue completamente transparente."</p>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar" aria-hidden="true">JR</div>
+              <div>
+                <div class="testimonial-card__name">Javier Reyes</div>
+                <div class="testimonial-card__role">Lead Engineer, CloudBase</div>
+              </div>
+            </div>
+          </article>
+
+          <article class="testimonial-card">
+            <div class="testimonial-card__stars" aria-label="5 estrellas">
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            </div>
+            <p class="testimonial-card__quote">"Las integraciones nativas nos permitieron conectar nuestra base de datos y autenticacion en minutos, no semanas. Es la primera vez que un despliegue no me quita el sueño."</p>
+            <div class="testimonial-card__author">
+              <div class="testimonial-card__avatar" aria-hidden="true">SL</div>
+              <div>
+                <div class="testimonial-card__name">Sofia Lucena</div>
+                <div class="testimonial-card__role">Fundadora, PixelApp</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta" id="cta" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="cta__box">
+          <h2 class="cta__title" id="cta-title">Comienza a construir hoy</h2>
+          <p class="cta__subtitle">Crea tu cuenta gratuita y despliega tu primer proyecto en menos de dos minutos. Sin tarjeta de credito.</p>
+          <form class="cta__form" action="#" method="post" aria-label="Formulario de registro">
+            <label for="email" class="sr-only">Correo electronico</label>
+            <input type="email" id="email" class="cta__input" placeholder="tu@correo.com" required autocomplete="email">
+            <button type="submit" class="btn-primary">Registrarse</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <a href="#" class="header__logo" aria-label="Apex - Inicio">
+            <div class="header__logo-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
+              </svg>
+            </div>
+            Apex
+          </a>
+          <p class="footer__brand-desc">La plataforma completa para construir, desplegar y escalar aplicaciones web de alto rendimiento.</p>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Producto</h3>
+          <nav class="footer__links" aria-label="Enlaces del producto">
+            <a href="#">Caracteristicas</a>
+            <a href="#">Precios</a>
+            <a href="#">Integraciones</a>
+            <a href="#">Changelog</a>
+          </nav>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Recursos</h3>
+          <nav class="footer__links" aria-label="Enlaces de recursos">
+            <a href="#">Documentacion</a>
+            <a href="#">Guias</a>
+            <a href="#">Blog</a>
+            <a href="#">API Reference</a>
+          </nav>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Empresa</h3>
+          <nav class="footer__links" aria-label="Enlaces de la empresa">
+            <a href="#">Acerca de</a>
+            <a href="#">Carreras</a>
+            <a href="#">Contacto</a>
+            <a href="#">Privacidad</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="footer__copyright">2026 Apex. Todos los derechos reservados.</p>
+        <div class="footer__socials">
+          <a href="#" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+          </a>
+          <a href="#" aria-label="Twitter">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+            </svg>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+              <rect x="2" y="9" width="4" height="12"></rect>
+              <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Minimal JS for mobile menu toggle only -->
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById('mobileNav');
+      const btn = document.querySelector('.header__menu-toggle');
+      const isOpen = nav.classList.toggle('active');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+    function closeMenu() {
+      document.getElementById('mobileNav').classList.remove('active');
+      document.querySelector('.header__menu-toggle').setAttribute('aria-expanded', 'false');
+    }
+  </script>
 </body>
 </html>
